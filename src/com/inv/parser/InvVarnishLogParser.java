@@ -119,9 +119,9 @@ public class InvVarnishLogParser implements ILogParser {
 			returnObj.put("country_code", (lo == null) ? ("")
 					: (lo.countryCode));
 			returnObj.put("country_name", (lo == null) ? ("")
-					: (lo.countryCode));
-			returnObj.put("city", (lo == null) ? ("") : (lo.countryCode));
-			returnObj.put("postalCode", (lo == null) ? ("") : (lo.countryCode));
+					: (lo.countryName));
+			returnObj.put("city", (lo == null) ? ("") : (lo.city));
+			returnObj.put("postalCode", (lo == null) ? ("") : (lo.postalCode));
 			returnObj.put("loation", (lo == null) ? (new String[] { "", "" })
 					: (new String[] { "" + lo.longitude, "" + lo.latitude }));
 			returnObj.put("newcol", "newcol");
