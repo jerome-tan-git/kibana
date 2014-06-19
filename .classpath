@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/elasticsearch-1.2.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/jna-4.1.0.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/jts-1.13.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-analyzers-common-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-codecs-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-core-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-grouping-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-highlighter-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-join-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-memory-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-misc-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-queries-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-queryparser-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-sandbox-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-spatial-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/lucene-suggest-4.8.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/spatial4j-0.4.1.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/geoip-api-1.2.13.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/jedis-2.1.0.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/commons-cli-1.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
