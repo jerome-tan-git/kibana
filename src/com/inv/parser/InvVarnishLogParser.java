@@ -18,7 +18,7 @@ public class InvVarnishLogParser implements ILogParser {
 	private SimpleDateFormat format1 = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	private SimpleDateFormat format2 = new SimpleDateFormat(
-			"'logstash'-yyyy.MM.dd");
+			"-yyyy.MM.dd");
 	private LookupService cl;
 
 	public InvVarnishLogParser() {
@@ -70,7 +70,7 @@ public class InvVarnishLogParser implements ILogParser {
 	}
 
 	@Override
-	public HashMap<String, Object> getLogObj(String _log) {
+	public HashMap<String, Object> getLogObj(String _log, String _prefix) {
 		if (FetchLog.isDebug) {
 			System.out.println("source:" + _log);
 		}
@@ -98,7 +98,8 @@ public class InvVarnishLogParser implements ILogParser {
 				date = format.parse(result[0]);
 			} catch (Exception e) {
 			}
-			String indexName = format2.format(date);
+			String indexName = _prefix + format2.format(date);
+			
 			String timestamp = format1.format(date);
 			String realIP = this.getRealIP(_log);
 			lo = this.getLocation(realIP);
@@ -143,6 +144,6 @@ public class InvVarnishLogParser implements ILogParser {
 	public static void main(String[] args) {
 		String a = "66.249.69.58 192.168.137.183 - - [17/Jun/2014:04:05:14 +0000] \"GET http://www.investopedia.com/articles/retirement/?page=7&d_pv= HTTP/1.1\" 200 23736 \"-\" \"Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)\" miss 6522028.923035 6";
 		InvVarnishLogParser aaa = new InvVarnishLogParser();
-		System.out.println(aaa.getLogObj(a));
+		System.out.println(aaa.getLogObj(a ,"test"));
 	}
 }

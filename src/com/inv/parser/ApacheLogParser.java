@@ -21,7 +21,7 @@ public class ApacheLogParser implements ILogParser {
 	private SimpleDateFormat format1 = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	private SimpleDateFormat format2 = new SimpleDateFormat(
-			"'logstash'-yyyy.MM.dd");
+			"-yyyy.MM.dd");
 	private LookupService cl;
 
 	public ApacheLogParser() {
@@ -75,12 +75,14 @@ public class ApacheLogParser implements ILogParser {
 	}
 
 	@Override
-	public HashMap<String, Object> getLogObj(String _log) {
+	public HashMap<String, Object> getLogObj(String _log, String _prefix) {
 		if (FetchLog.isDebug) {
 			System.out.println("source:" + _log);
 		}
 		Location lo = null;
+		String host = _log.substring(0, _log.indexOf(' '));
 		_log = _log.substring(_log.indexOf(' ')).trim();
+		  
 		HashMap returnObj = null;
 		if (_log.indexOf('[') == -1)
 			return null;
@@ -101,7 +103,7 @@ public class ApacheLogParser implements ILogParser {
 				date = format.parse(result[0]);
 			} catch (Exception e) {
 			}
-			String indexName = format2.format(date);
+			String indexName = _prefix + format2.format(date);
 			String timestamp = format1.format(date);
 			String realIP = this.getRealIP(_log);
 			lo = this.getLocation(realIP);
@@ -116,6 +118,7 @@ public class ApacheLogParser implements ILogParser {
 			returnObj.put("responseTime", df.format(performance / 1000000));
 			returnObj.put("useagent", result[5]);
 			returnObj.put("IP", realIP);
+			returnObj.put("host", host);
 			returnObj.put("method", result[1].split("\\s")[0]);
 			returnObj.put("URL", result[1].split("\\s")[1]);
 			returnObj.put("varnishhit", result[6]);
@@ -156,7 +159,7 @@ public class ApacheLogParser implements ILogParser {
 		// System.out.println(aaa);
 		while ((line = br.readLine()) != null) {
 
-			HashMap aaa = x.getLogObj(line);
+			HashMap aaa = x.getLogObj(line , "test");
 			if (aaa == null)
 				System.out.println(line);
 			else

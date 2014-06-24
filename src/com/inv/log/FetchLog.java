@@ -46,17 +46,18 @@ public class FetchLog {
 	private static SimpleDateFormat format1 = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	private static SimpleDateFormat format2 = new SimpleDateFormat(
-			"'logstash'-yyyy.MM.dd");
+			"-yyyy.MM.dd");
 	public static boolean isDebug = false;
 
 	private static HashMap<String, ILogParser> parserMap = new HashMap<String, ILogParser>();
-	public static void setLogParser(HashMap<String, ILogParser> _parserMap)
-	{
+	private static HashMap<String, String> indexMap = new HashMap<String, String>();
+	public static void setLogParser(HashMap<String, ILogParser> _parserMap) {
 		FetchLog.parserMap = _parserMap;
 	}
+
 	public static void doFetch(int _duration, List<ServerObj> _server,
 			String _redisIP, String[] _queueNames) throws IOException {
-		
+
 		SimpleDateFormat formatter = new SimpleDateFormat(
 				"yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
 		TimeZone tztz = TimeZone.getTimeZone("UTC");
@@ -87,9 +88,8 @@ public class FetchLog {
 			List<String> values = null;
 			try {
 				values = jedis1.blpop(1, _queueNames);
-				if(FetchLog.isDebug)
-				{
-					System.out.println(values);
+				if (FetchLog.isDebug) {
+					System.out.println("Get redis:" + values);
 				}
 			} catch (Exception e) {
 				try {
@@ -112,39 +112,49 @@ public class FetchLog {
 			for (int i = 0; i < values.size(); i = i + 2) {
 				String source = values.get(i);
 				String value = values.get(i + 1);
-				if(value.indexOf('[')==-1)
-				{
-					if(FetchLog.isDebug)
-					{
+				if (value.indexOf('[') == -1) {
+					if (FetchLog.isDebug) {
 						System.out.println(values);
 					}
 				}
-				ILogParser logParser = FetchLog.parserMap.get(source);
+				ILogParser logParser = FetchLog.parserMap.get(source+".parser");
 				String type = "production";
 				String status = "ok";
 				Location lo = null;
-				String realIP  = "";
-				HashMap<String,Object> result = null;
-				if(logParser != null)
-				{
-					//realIP = logParser.getRealIP(value);
-					result = logParser.getLogObj(value);
+				String realIP = "";
+				String indexPrefix = indexMap.get(source + ".index");
 
-					if(result == null)
-					{
+				if(indexPrefix == null)
+				{
+					indexPrefix = "logstash";
+				}
+				else if(indexPrefix.trim().equals(""))
+				{
+					indexPrefix = "logstash";
+				}
+				HashMap<String, Object> result = null;
+				if (logParser != null) {
+					// realIP = logParser.getRealIP(value);
+					result = logParser.getLogObj(value, indexPrefix);
+					
+					if (result == null) {
 						status = "not_matched";
 					}
-				}
-				else
-				{
+				} else {
 					status = "no_parser";
 				}
-				//System.out.println(realIP);
+				if (FetchLog.isDebug) {
+					System.out.println("Parser:" + logParser);
+				}
+				
+				
+				
+				// System.out.println(realIP);
 				if (result == null) {
 					Date date = new Date();
-					String indexName = format2.format(date);
+					String indexName = indexPrefix + format2.format(date);
 					String timeStamp = format1.format(date);
-					
+
 					IndexResponse response = client
 							.prepareIndex(indexName, type,
 									UUID.randomUUID().toString())
@@ -156,28 +166,28 @@ public class FetchLog {
 											.field("source", source)
 											.field("status", status)
 											.endObject()).execute().actionGet();
-					
+
 				} else {
-//					System.out.println(result);
+					// System.out.println(result);
 					XContentBuilder obj = jsonBuilder().startObject();
-					for(String key:result.keySet())
-					{
-						obj.field(key.toString(),result.get(key));
+					for (String key : result.keySet()) {
+						obj.field(key.toString(), result.get(key));
 					}
 					obj.field("status", status);
 					obj.field("source", source);
 					obj.endObject();
+					if(FetchLog.isDebug)
+					{
+						System.out.println("Index name:" + result.get("@indexName").toString());
+					}
 					IndexResponse response = client
-							.prepareIndex(result.get("@indexName").toString(), type,
-									UUID.randomUUID().toString())
+							.prepareIndex(result.get("@indexName").toString(),
+									type, UUID.randomUUID().toString())
 							.setSource(obj).execute().actionGet();
 				}
 			}
 		}
 	}
-
-
-
 
 	public static HashMap<String, ILogParser> getLogParser() throws IOException {
 		HashMap<String, ILogParser> result = new HashMap<String, ILogParser>();
@@ -185,13 +195,17 @@ public class FetchLog {
 		FileInputStream fis = new FileInputStream("logParser.properties");
 		prop.load(fis);
 		Set<Object> keys = prop.keySet();
-		for(Object key: keys)
-		{
+		for (Object key : keys) {
 			try {
-				Class<?> c = Class.forName(prop.getProperty(key.toString()));
-				Constructor<?> cons[] = c.getConstructors();
-				ILogParser f1 = (ILogParser) cons[0].newInstance();
-				result.put(key.toString(), f1);
+				if (key.toString().endsWith(".parser")) {
+					Class<?> c = Class
+							.forName(prop.getProperty(key.toString()));
+					Constructor<?> cons[] = c.getConstructors();
+					ILogParser f1 = (ILogParser) cons[0].newInstance();
+					result.put(key.toString(), f1);
+				} else if (key.toString().endsWith(".index")) {
+					indexMap.put(key.toString(), prop.getProperty(key.toString()));
+				}
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -236,8 +250,7 @@ public class FetchLog {
 					String redis = cl.getOptionValue("r");
 					String queue = cl.getOptionValue("q");
 					String debugStr = cl.getOptionValue("g");
-					if(debugStr != null && debugStr.trim().equals("1"))
-					{
+					if (debugStr != null && debugStr.trim().equals("1")) {
 						System.out.println("debug opened...........");
 						FetchLog.isDebug = true;
 					}
@@ -274,7 +287,8 @@ public class FetchLog {
 							serverObjs.add(x);
 						}
 					}
-					HashMap<String, ILogParser> logParser = FetchLog.getLogParser();
+					HashMap<String, ILogParser> logParser = FetchLog
+							.getLogParser();
 					FetchLog.setLogParser(logParser);
 					FetchLog.doFetch(time, serverObjs, redis, queueNames);
 				}
