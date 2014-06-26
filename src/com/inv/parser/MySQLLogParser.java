@@ -11,7 +11,7 @@ import com.maxmind.geoip.Location;
 public class MySQLLogParser implements ILogParser{
 	
 	private SimpleDateFormat format = new SimpleDateFormat(
-			"yyyy-MMM-dd HH:mm:ss");
+			"yyyy-MM-dd HH:mm:ss");
 	private SimpleDateFormat format1 = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	private SimpleDateFormat format2 = new SimpleDateFormat(
@@ -35,11 +35,12 @@ public class MySQLLogParser implements ILogParser{
 
 		if (result != null && result.length>=4) {
 		
-
+			System.out.println("result 0 : " + result[0]);
 			Date date = new Date();
 			try {
 				date = format.parse(result[0]);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			String indexName = _prefix + format2.format(date);
 			String timestamp = format1.format(date);

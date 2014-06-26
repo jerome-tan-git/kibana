@@ -73,7 +73,24 @@ public class ApacheLogParser implements ILogParser {
 		}
 		return realip;
 	}
-
+	private String getServerName(String _log)
+	{
+		String serverName = null;
+		if(_log.indexOf('|')!=-1 && _log.indexOf('|')<30)
+		{
+			serverName = _log.substring(0, _log.indexOf('|'));
+		}
+		return serverName;
+	}
+	private String removeServerName (String _log)
+	{
+		String result = _log;
+		if(_log.indexOf('|')!=-1 && _log.indexOf('|')<30)
+		{
+			result = _log.substring( _log.indexOf('|')+1);
+		}
+		return result;
+	}
 	@Override
 	public HashMap<String, Object> getLogObj(String _log, String _prefix) {
 		if (FetchLog.isDebug) {
@@ -84,6 +101,11 @@ public class ApacheLogParser implements ILogParser {
 		_log = _log.substring(_log.indexOf(' ')).trim();
 		  
 		HashMap returnObj = null;
+		String serverName = this.getServerName(_log);
+		if(serverName != null)
+		{
+			_log = this.removeServerName(_log);
+		}
 		if (_log.indexOf('[') == -1)
 			return null;
 		String str2 = _log.substring(_log.indexOf('['));
@@ -118,6 +140,10 @@ public class ApacheLogParser implements ILogParser {
 			returnObj.put("responseTime", df.format(performance / 1000000));
 			returnObj.put("useagent", result[5]);
 			returnObj.put("IP", realIP);
+			if(serverName != null)
+			{
+				returnObj.put("serverName", serverName);
+			}
 			returnObj.put("host", host);
 			returnObj.put("method", result[1].split("\\s")[0]);
 			returnObj.put("URL", result[1].split("\\s")[1]);

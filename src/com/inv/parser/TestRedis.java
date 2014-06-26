@@ -74,6 +74,7 @@ public class TestRedis {
 		// //System.out.println(o.getPhoneNumber());
 		// System.out.println(value);
 		Jedis jedis1 = new Jedis("192.168.145.238");
+//		jedis1.del(new String[] { "inv_mysql_master" });
 		while (true) {
 			// try
 			// {

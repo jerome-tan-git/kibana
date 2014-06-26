@@ -68,7 +68,24 @@ public class InvVarnishLogParser implements ILogParser {
 		}
 		return realip;
 	}
-
+	private String getServerName(String _log)
+	{
+		String serverName = null;
+		if(_log.indexOf('|')!=-1 && _log.indexOf('|')<30)
+		{
+			serverName = _log.substring(0, _log.indexOf('|'));
+		}
+		return serverName;
+	}
+	private String removeServerName (String _log)
+	{
+		String result = _log;
+		if(_log.indexOf('|')!=-1 && _log.indexOf('|')<30)
+		{
+			result = _log.substring( _log.indexOf('|')+1);
+		}
+		return result;
+	}
 	@Override
 	public HashMap<String, Object> getLogObj(String _log, String _prefix) {
 		if (FetchLog.isDebug) {
@@ -76,6 +93,11 @@ public class InvVarnishLogParser implements ILogParser {
 		}
 		Location lo = null;
 		HashMap returnObj = null;
+		String serverName = this.getServerName(_log);
+		if(serverName != null)
+		{
+			_log = this.removeServerName(_log);
+		}
 		if (_log.indexOf('[') == -1) {
 
 			System.out.println("bad:" + _log);
@@ -86,6 +108,7 @@ public class InvVarnishLogParser implements ILogParser {
 		String logEntryPattern = "\\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(.+?)\" (\\d{3}) ([\\d|\\-]+) \"([^\"]*)\" \"([^\"]+)\" (\\w+) ([0-9\\.]+) ([0-9]+)";
 		String[] result = this.getMatcher(logEntryPattern, str2);
 		if (result != null) {
+			
 			DecimalFormat df = new DecimalFormat("#.###");
 
 			double performance = -1;
@@ -113,7 +136,10 @@ public class InvVarnishLogParser implements ILogParser {
 			returnObj.put("responseTime", df.format(performance / 1000000));
 			returnObj.put("useagent", result[5]);
 			returnObj.put("IP", realIP);
-
+			if(serverName != null)
+			{
+				returnObj.put("serverName", serverName);
+			}
 			returnObj.put("method", result[1].split("\\s")[0]);
 			returnObj.put("URL", result[1].split("\\s")[1]);
 			returnObj.put("varnishhit", result[6]);
