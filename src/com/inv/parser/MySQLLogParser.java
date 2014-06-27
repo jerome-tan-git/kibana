@@ -35,7 +35,7 @@ public class MySQLLogParser implements ILogParser{
 
 		if (result != null && result.length>=4) {
 		
-			System.out.println("result 0 : " + result[0]);
+//			System.out.println("result 0 : " + result[0]);
 			Date date = new Date();
 			try {
 				date = format.parse(result[0]);
