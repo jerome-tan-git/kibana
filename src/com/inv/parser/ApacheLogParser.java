@@ -91,21 +91,24 @@ public class ApacheLogParser implements ILogParser {
 		}
 		return result;
 	}
+	
 	@Override
 	public HashMap<String, Object> getLogObj(String _log, String _prefix) {
 		if (FetchLog.isDebug) {
 			System.out.println("source:" + _log);
 		}
 		Location lo = null;
-		String host = _log.substring(0, _log.indexOf(' '));
-		_log = _log.substring(_log.indexOf(' ')).trim();
-		  
-		HashMap returnObj = null;
 		String serverName = this.getServerName(_log);
 		if(serverName != null)
 		{
 			_log = this.removeServerName(_log);
 		}
+		
+		String host = _log.substring(0, _log.indexOf(' '));
+		_log = _log.substring(_log.indexOf(' ')).trim();
+		  
+		HashMap returnObj = null;
+		
 		if (_log.indexOf('[') == -1)
 			return null;
 		String str2 = _log.substring(_log.indexOf('['));

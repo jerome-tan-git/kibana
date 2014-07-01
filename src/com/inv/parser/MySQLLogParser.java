@@ -32,7 +32,7 @@ public class MySQLLogParser implements ILogParser{
 		  
 		HashMap returnObj = null;
 		String[] result = _log.split("\t");
-
+		
 		if (result != null && result.length>=4) {
 		
 //			System.out.println("result 0 : " + result[0]);
@@ -55,7 +55,10 @@ public class MySQLLogParser implements ILogParser{
 			returnObj.put("processID", result[2]);
 			returnObj.put("sql", result[3]);
 		} else {
-			// System.out.println("Error:" + _log);
+			if (FetchLog.isDebug) {
+				
+			 System.out.println("Error:" + _log);
+			}
 			return null;
 		}
 		// System.out.println(returnObj);
