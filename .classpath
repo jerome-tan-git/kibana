@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/geoip-api-1.2.13.jar"/>
 	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/jedis-2.1.0.jar"/>
 	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="E:/Users/jetan/workspace_ee/TestElasticSearch/fastjson-1.1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
