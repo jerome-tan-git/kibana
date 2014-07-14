@@ -74,39 +74,51 @@ public class TestRedis {
 		// //System.out.println(o.getPhoneNumber());
 		// System.out.println(value);
 		Jedis jedis1 = new Jedis("192.168.145.238");
-		//System.out.println(jedis1.keys("*"));
-		//jedis1.del(new String[]{"@timestamp","dbName","tableName","eventType","changeColums","afterColums","beforeColumns"});
-//		jedis1.rpoplpush("inv_binlog", "");
-//		jedis1.ltrim("inv_binlog", 0, 1000000);
-////		jedis1.del(new String[] { "inv_mysql_master" });
-//		while (true) {
-//			// try
-//			// {
-//			// System.out.println(new Date().toLocaleString()+ ":"+
-//			// jedis1.llen("cmus_apache"));
-//			List<String> values = jedis1.blpop(1,
-//					new String[] { "inv_mysql_master" });
-//			if (values != null) {
-//				String _log = (values.get(1));
-//				System.out.println(_log);
-////				String host = _log.substring(0, _log.indexOf(' '));
-////				System.out.println(host + " | " + values.get(1));
-//			}
-			// if(a.indexOf('[')==-1)
-			// {
-			// System.out.println(values);
-			// }
-			// else
-			// {
-			// System.out.println("aaa" + a);
-			// }
-			// }
-			// catch(Exception e)
-			// {
-			//
-			// }
-			// Thread.sleep(1000);
-//		}
+		for (;;) {
+
+			for (String a : jedis1.keys("*")) {
+				
+				System.out.println(a + " ==> " + jedis1.llen(a));
+				if(a.indexOf("mysql")!=-1)
+				{
+					System.out.println(jedis1.lpop(a));
+				}
+			}
+		}
+		// System.out.println(jedis1.llen("inv_binlog"));
+		// jedis1.del(new String[]{"inv_binlog"});
+		// jedis1.ltrim("inv_binlog", 0, 1);
+		// jedis1.rpoplpush("inv_binlog", "");
+		// jedis1.ltrim("inv_binlog", 0, 1000000);
+		// // jedis1.del(new String[] { "inv_mysql_master" });
+		// while (true) {
+		// // try
+		// // {
+		// // System.out.println(new Date().toLocaleString()+ ":"+
+		// // jedis1.llen("cmus_apache"));
+		// List<String> values = jedis1.blpop(1,
+		// new String[] { "inv_mysql_master" });
+		// if (values != null) {
+		// String _log = (values.get(1));
+		// System.out.println(_log);
+		// // String host = _log.substring(0, _log.indexOf(' '));
+		// // System.out.println(host + " | " + values.get(1));
+		// }
+		// if(a.indexOf('[')==-1)
+		// {
+		// System.out.println(values);
+		// }
+		// else
+		// {
+		// System.out.println("aaa" + a);
+		// }
+		// }
+		// catch(Exception e)
+		// {
+		//
+		// }
+		// Thread.sleep(1000);
+		// }
 
 	}
 }
