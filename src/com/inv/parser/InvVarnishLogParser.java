@@ -135,7 +135,7 @@ public class InvVarnishLogParser implements ILogParser {
 			returnObj.put("responseCode", result[2]);
 			try
 			{
-				returnObj.put("responseTime", Integer.parseInt(""+performance / 1000));
+				returnObj.put("responseTime", (int)(performance / 1000));
 			}
 			catch(Exception e)
 			{
