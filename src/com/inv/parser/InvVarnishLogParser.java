@@ -109,7 +109,7 @@ public class InvVarnishLogParser implements ILogParser {
 		String[] result = this.getMatcher(logEntryPattern, str2);
 		if (result != null) {
 			
-			DecimalFormat df = new DecimalFormat("#.###");
+			//DecimalFormat df = new DecimalFormat("#.###");
 
 			double performance = -1;
 			try {
@@ -135,7 +135,7 @@ public class InvVarnishLogParser implements ILogParser {
 			returnObj.put("responseCode", result[2]);
 			try
 			{
-				returnObj.put("responseTime", Float.parseFloat(df.format(performance / 1000000)));
+				returnObj.put("responseTime", Integer.parseInt(""+performance / 1000));
 			}
 			catch(Exception e)
 			{
