@@ -77,11 +77,29 @@ public class TestRedis {
 		for (;;) {
 
 			for (String a : jedis1.keys("*")) {
+				try
+				{
+					System.out.println(a + " ==> " + jedis1.llen(a));
+					if(a.equals("mysql_slavedelay"))
+					{
+						System.out.println(jedis1.lpop(a));
+					}
+				}
+				catch(Exception e)
+				{
+					e.getMessage();
+				}
 				
-				System.out.println(a + " ==> " + jedis1.llen(a));
 				if(a.indexOf("mysql")!=-1)
 				{
-					System.out.println(jedis1.lpop(a));
+					try
+					{
+						System.out.println(jedis1.lpop(a));
+					}
+					catch(Exception e)
+					{
+						e.getMessage();
+					}
 				}
 			}
 		}
