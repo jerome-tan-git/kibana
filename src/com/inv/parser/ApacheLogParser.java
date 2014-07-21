@@ -143,10 +143,12 @@ public class ApacheLogParser implements ILogParser {
 			try
 			{
 				returnObj.put("responseTime", (int)(performance / 1000));
+				returnObj.put("responseTime-ms", (int)(performance / 1000));
 			}
 			catch(Exception e)
 			{
 				returnObj.put("responseTime", 9999);
+				returnObj.put("responseTime-ms", 9999);
 			}
 			returnObj.put("useagent", result[5]);
 			returnObj.put("IP", realIP);
