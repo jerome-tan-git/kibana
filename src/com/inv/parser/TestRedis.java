@@ -80,7 +80,7 @@ public class TestRedis {
 				try
 				{
 					System.out.println(a + " ==> " + jedis1.llen(a));
-					if(a.equals("mysql_slavedelay"))
+					if(a.equals("mysql_slowlog"))
 					{
 						System.out.println(jedis1.lpop(a));
 					}
@@ -90,11 +90,11 @@ public class TestRedis {
 					e.getMessage();
 				}
 				
-				if(a.indexOf("mysql")!=-1)
+				if(a.indexOf("inv_binlog")!=-1)
 				{
 					try
 					{
-						System.out.println(jedis1.lpop(a));
+						System.out.println(jedis1.del("inv_binlog"));
 					}
 					catch(Exception e)
 					{

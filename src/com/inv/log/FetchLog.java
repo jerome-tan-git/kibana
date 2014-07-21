@@ -178,7 +178,7 @@ public class FetchLog {
 					obj.endObject();
 					if(FetchLog.isDebug)
 					{
-						System.out.println("Index name:" + result.get("@indexName").toString() + ">>>" + result);
+						System.out.println("Index name:" + result.get("@indexName").toString() + ">>>" + result + " >> [" + source + "]");
 					}
 					IndexResponse response = client
 							.prepareIndex(result.get("@indexName").toString(),
